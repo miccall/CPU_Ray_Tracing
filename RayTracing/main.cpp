@@ -133,6 +133,39 @@ void setpixdata(int cc, int index_culm)
 	}
 }
 
+void setpixdata(int cc, int culm , int row )
+{
+	int start = ImageHeight - 1 - (culm * ImageHeight) / 3;
+	int loop = ImageHeight - (culm + 1) * ImageHeight / 3;
+	int rowstart = (row * ImageWidth) / 4;
+	int rowend = (row + 1) * ImageWidth / 4 - 1;
+	//std::cout <<"index-"<< index_culm << ":" << "start " << start << "loop until " << loop << std::endl;
+	for (int j = start; j >= loop; j--)
+	{
+		for (int i = rowstart * 3 , k = rowstart ; i <= rowend * 3 ; i += 3, k++)
+		{
+			float u = float(k + drand48()) / float(ImageWidth);
+			float v = float(j + drand48()) / float(ImageHeight);
+
+			Ray r = cam.getRay(u, v);
+			int index = j * ImageWidth + k;
+			col[index] += color(r, world, 0);
+
+			colorvec = col[index] / float(cc);
+			colorvec = Gamma_Correct(colorvec);
+
+			int R = int(255.99 * colorvec[0]);
+			int G = int(255.99 * colorvec[1]);
+			int B = int(255.99 * colorvec[2]);
+
+			// 像素数据 
+			PixelData[j *(rgbwidth)+(i + 0)] = (GLbyte)R;  // R
+			PixelData[j *(rgbwidth)+(i + 1)] = (GLbyte)G;  // G
+			PixelData[j *(rgbwidth)+(i + 2)] = (GLbyte)B;  // B
+
+		}
+	}
+}
 // 循环采样
 void timerProc(int id)
 {
@@ -154,7 +187,7 @@ void func1()
 	{
 		showProgress(SamplingRate - count, SamplingRate);
 		savepic();
-		setpixdata(count, 0);
+		setpixdata(count, 0,0);
 		count++;
 	}
 }
@@ -165,7 +198,7 @@ void func2()
 	int cc = 2;
 	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
 	{
-		setpixdata(cc, 1);
+		setpixdata(cc, 0,1);
 		cc++;
 	}
 }
@@ -176,7 +209,99 @@ void func3()
 	int cc = 2;
 	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
 	{
-		setpixdata(cc, 2);
+		setpixdata(cc, 0,2);
+		cc++;
+	}
+}
+
+// 线程3
+void func4()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 0, 3);
+		cc++;
+	}
+}
+
+// 线程3
+void func5()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 1, 0);
+		cc++;
+	}
+}
+// 线程3
+void func6()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 1, 1);
+		cc++;
+	}
+}
+// 线程3
+void func7()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 1, 2);
+		cc++;
+	}
+}
+// 线程3
+void func8()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 1, 3);
+		cc++;
+	}
+}
+// 线程3
+void func9()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 2, 0);
+		cc++;
+	}
+}
+// 线程3
+void func10()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 2, 1);
+		cc++;
+	}
+}
+// 线程3
+void func11()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 2, 2);
+		cc++;
+	}
+}
+// 线程3
+void func12()
+{
+	int cc = 2;
+	for (int i = 0; i < SamplingRate && count <= SamplingRate; i++)
+	{
+		setpixdata(cc, 2, 3);
 		cc++;
 	}
 }
@@ -200,15 +325,55 @@ void testMC04()
 	getchar();
 }
 
+
+void testTiledata()
+{
+	int culm = 1, row = 3 ;
+
+	int start = ImageHeight - 1 - (culm * ImageHeight) / 3;
+	int loop = ImageHeight - (culm + 1) * ImageHeight / 3;
+	int rowstart = (row * ImageWidth) / 4 ;
+	int rowend = (row + 1) * ImageWidth / 4 -1 ;
+
+	// 遍历 高 
+	for (int j = start ; j >= loop ; j--)
+	{
+		// 便利宽 
+		for (int i = rowstart * 3 , k = 0 ; i < rowend*3 ; i += 3, k++)
+		{
+			int index = j * ImageWidth + k;
+			col[index] = Vec3(0, 0, 0);
+
+			PixelData[j *(rgbwidth)+(i + 0)] = (GLbyte) int(0);  // R
+			PixelData[j *(rgbwidth)+(i + 1)] = (GLbyte) int(255);  // G
+			PixelData[j *(rgbwidth)+(i + 2)] = (GLbyte) int(0);  // B	
+		}
+	}
+
+}
 // 主方法 
 int main(int argc, char** argv)
 {
+	// 初始化 
 	data();
+	// 第一帧数据 
 	renderdata();
-
+	
+	// 开子线程完成
 	std::thread t1(func1);
 	std::thread t2(func2);
 	std::thread t3(func3);
+	std::thread t4(func4);
+
+	std::thread t5(func5);
+	std::thread t6(func6);
+	std::thread t7(func7);
+	std::thread t8(func8);
+
+	std::thread t9(func9);
+	std::thread t10(func10);
+	std::thread t11(func11);
+	std::thread t12(func12);
 
 	// GL 初始化 自定义初始化内容
 	init(argc, argv, GLUT_DOUBLE | GLUT_RGBA, 100, 100, ImageWidth, ImageHeight, "miccall");
@@ -219,6 +384,17 @@ int main(int argc, char** argv)
 	t1.join();
 	t2.join();
 	t3.join();
+	t4.join();
+
+	t5.join();
+	t6.join();
+	t7.join();
+	t8.join();
+
+	t9.join();
+	t10.join();
+	t11.join();
+	t12.join();
 
 	// testMC04();
 
