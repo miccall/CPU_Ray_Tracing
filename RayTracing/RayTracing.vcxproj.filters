@@ -74,5 +74,8 @@
     <ClInclude Include="Rect.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="thread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
