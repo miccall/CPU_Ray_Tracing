@@ -115,18 +115,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="MicImage.cpp" />
-    <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="RayTracing.cpp" />
-    <ClCompile Include="Vec3.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Functions.h" />
-    <ClInclude Include="MicImage.h" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AxisAlignedBoundBox.h" />
+    <ClInclude Include="box.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="hitable.h" />
+    <ClInclude Include="hitablelist.h" />
+    <ClInclude Include="material.h" />
+    <ClInclude Include="onb.h" />
+    <ClInclude Include="perlin.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="Rect.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="sphere.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="texture.h" />
     <ClInclude Include="Vec3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
