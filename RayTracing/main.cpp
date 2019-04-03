@@ -148,8 +148,6 @@ int main(int argc, char** argv)
 	t11.join();
 	t12.join();
 
-	// testMC04();
-
 	return 0;
 }
 
